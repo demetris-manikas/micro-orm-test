@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  backend:
+    image: micro-orm/backend:latest
+    build:
+      context: backend
+      dockerfile: Dockerfile
+    ports:
+      - '127.0.0.1:3002:3000'
+    depends_on:
+      - postgres-db
+    volumes:
+      - ./backend:/home/node/app
+    environment:
+      TZ: ${TIMEZONE}
+      FORCE_COLOR: "1"
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MARIADB_HOST: ${MARIADB_HOST}
+      MARIADB_PORT: ${MARIADB_PORT}
+      MARIADB_DB: ${MARIADB_DB}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+  postgres-db:
+    image: postgis/postgis:14-3.3
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:5433:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      TZ: ${TIMEZONE}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  maria-db:   # The location of the database
+    image: mariadb:10.11
+    environment:
+      TZ: ${TIMEZONE}
+      MYSQL_ROOT_PASSWORD: ${MARIADB_PASSWORD}
+      MYSQL_DATABASE: ${MARIADB_DB}
+    command:
+      - --innodb-buffer-pool-size=120M
+      - --innodb_flush_log_at_trx_commit=2
+      - --wait-timeout=86400
+      - --max_allowed_packet=67108864
+    volumes:
+      - eclass_empower_db_data:/var/lib/mysql
+    healthcheck:
+      test: mysql --user=root --password=$$MYSQL_ROOT_PASSWORD -e 'show databases;' | grep -q $$MYSQL_DATABASE || exit 1
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+
+volumes:
+  postgres_data:
+    driver: local
+  eclass_empower_db_data:
+    driver: local
