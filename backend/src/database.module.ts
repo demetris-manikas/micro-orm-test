@@ -10,7 +10,7 @@ import { MariaDbDriver } from '@mikro-orm/mariadb';
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      // contextName: 'postgres',
+      contextName: 'postgres',
       useFactory: (configService: ConfigService) => {
         return {
           registerRequestContext: false,

@@ -8,8 +8,8 @@ import { InjectEntityManager } from '@mikro-orm/nestjs';
 @Injectable()
 export class UserService {
   constructor(
-    // @InjectEntityManager('postgres') private readonly em: EntityManager,
-    private readonly em: EntityManager,
+    @InjectEntityManager('postgres') private readonly em: EntityManager,
+    // private readonly em: EntityManager,
   ) {}
 
 }
