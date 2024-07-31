@@ -41,7 +41,7 @@ import { MariaDbDriver } from '@mikro-orm/mariadb';
         };
       },
     }),
-    MikroOrmModule.forMiddleware()
+    // MikroOrmModule.forMiddleware()
   ],
   providers: [],
   exports: [MikroOrmModule],
