@@ -13,8 +13,8 @@ import { MariaDbDriver } from '@mikro-orm/mariadb';
       contextName: 'postgres',
       useFactory: (configService: ConfigService) => {
         return {
-          registerRequestContext: false,
           autoLoadEntities: true,
+          registerRequestContext: false,
           driver: PostgreSqlDriver,
           host: configService.get('POSTGRES_HOST'),
           port: +configService.get<number>('POSTGRES_PORT', 5432),
@@ -24,13 +24,13 @@ import { MariaDbDriver } from '@mikro-orm/mariadb';
         };
       },
     }),
-
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       contextName: 'mariadb',
       useFactory: (configService: ConfigService) => {
         return {
+          registerRequestContext: false,
           autoLoadEntities: true,
           driver: MariaDbDriver,
           host: configService.get('MARIADB_HOST'),
@@ -41,6 +41,7 @@ import { MariaDbDriver } from '@mikro-orm/mariadb';
         };
       },
     }),
+    MikroOrmModule.forMiddleware()
   ],
   providers: [],
   exports: [MikroOrmModule],

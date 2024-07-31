@@ -5,8 +5,8 @@ import { User } from './user.entity';
 
 @Module({
   imports: [
-    MikroOrmModule.forFeature([User], 'postgres'),
-    // MikroOrmModule.forFeature([User]),
+    // MikroOrmModule.forFeature([User], 'postgres'),
+    MikroOrmModule.forFeature([User]),
   ],
   controllers: [],
   providers: [UserService],
